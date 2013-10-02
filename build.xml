@@ -1,0 +1,56 @@
+<project name="Wiki" default="all" >
+
+        <property name="wikiJ.dir" value="src/ru/gavr/wiki"/>
+        <property name="build.dir" value="build"/>
+        <property name="ru.dir" value="build/ru"/>
+	<property name="gavr.dir" value="build/ru/gavr"/>
+	<property name="wikiC.dir" value="build/ru/gavr/wiki"/>
+	<property name="files.dir" value="build/ru/gavr/wiki/files"/>
+	<property name="bin.dir" value="bin"/>
+	<property name="output.dir" value="bin/output"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="tests.dir" value="tests"/>
+       
+        <target name="make_dirs" description="Make some dirs">
+                <mkdir dir="${build.dir}"/>
+		<mkdir dir="${ru.dir}"/>
+		<mkdir dir="${gavr.dir}"/>
+		<mkdir dir="${wikiC.dir}"/>
+		<mkdir dir="${files.dir}"/>
+		<echo file="${files.dir}/actors.txt"></echo>
+		<echo file="${files.dir}/usedActors.txt"></echo>
+		<mkdir dir="${bin.dir}"/>
+		<mkdir dir="${output.dir}"/>
+		<echo file="${output.dir}/actors.txt"></echo>
+		<echo file="${output.dir}/usedActors.txt"></echo>
+		<mkdir dir="${lib.dir}"/>
+		<mkdir dir="${tests.dir}"/>
+        </target>
+
+        <target name="compile" description="compile java" depends="make_dirs">
+                <javac destdir="${wikiC.dir}">
+                        <src path="${wikiJ.dir}"/>
+                </javac>
+        </target>
+
+        <target name="make_jar" description="make jar file" depends="compile">
+                <jar destfile="${lib.dir}/Wiki.jar">
+                        <fileset dir="${wikiC.dir}">
+                                <include name="**/*.class"/>
+                        </fileset>
+                </jar>
+        </target>
+
+	<target name="make_run_file" description="make file Wiki.sh" depends="make_jar">
+		<echo file="${bin.dir}/Wiki.sh">cd ..
+cd build/ru/gavr/wiki
+java Search
+cd ../../../..
+cp build/ru/gavr/wiki/files/actors.txt bin/output
+cp build/ru/gavr/wiki/files/usedActors.txt bin/output
+		</echo> 
+	</target>
+
+        <target name="all" description="Do the build" depends="make_run_file"/>
+       
+</project>
