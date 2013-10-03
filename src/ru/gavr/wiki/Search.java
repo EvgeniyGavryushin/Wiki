@@ -113,9 +113,6 @@ public class Search {
 				
 			case "Logged actor":
 				if (!(actors.lastElement().filmography.isEmpty())) {
-					while (Actor.wasLogged(actors.lastElement().filmography.lastElement())) {
-						actors.lastElement().filmography.pop();
-					}
 					URL = actors.lastElement().filmography.pop();
 					webPage.changeState("Create film");
 				}

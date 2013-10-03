@@ -24,13 +24,15 @@
 		<echo file="${output.dir}/actors.txt"></echo>
 		<echo file="${output.dir}/usedActors.txt"></echo>
 		<mkdir dir="${lib.dir}"/>
-		<mkdir dir="${tests.dir}"/>
         </target>
 
         <target name="compile" description="compile java" depends="make_dirs">
                 <javac destdir="${wikiC.dir}">
                         <src path="${wikiJ.dir}"/>
                 </javac>
+		<javac destdir="${tests.dir}">
+			<src path="${tests.dir}"/>
+		</javac>
         </target>
 
         <target name="make_jar" description="make jar file" depends="compile">
