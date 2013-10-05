@@ -1,0 +1,72 @@
+<project name="Wiki" default="all" >
+
+        <property name="wikiProgJ.dir" value="src/ru/gavr/wiki/prog"/>
+	<property name="wikiTestsJ.dir" value="src/ru/gavr/wiki/tests"/>
+        <property name="build.dir" value="build"/>
+        <property name="ru.dir" value="build/ru"/>
+	<property name="gavr.dir" value="build/ru/gavr"/>
+	<property name="wiki.dir" value="build/ru/gavr/wiki"/>
+	<property name="wikiProgC.dir" value="build/ru/gavr/wiki/prog"/>
+	<property name="wikiTestsC.dir" value="build/ru/gavr/wiki/tests"/>
+	<property name="files.dir" value="build/ru/gavr/wiki/prog/files"/>
+	<property name="bin.dir" value="bin"/>
+	<property name="output.dir" value="bin/output"/>
+	<property name="lib.dir" value="lib"/>
+	<property name="tests.dir" value="tests"/>
+       
+        <target name="make_dirs" description="Make some dirs">
+                <mkdir dir="${build.dir}"/>
+		<mkdir dir="${ru.dir}"/>
+		<mkdir dir="${gavr.dir}"/>
+		<mkdir dir="${wiki.dir}"/>
+		<mkdir dir="${wikiProgC.dir}"/>
+		<mkdir dir="${wikiTestsC.dir}"/>
+		<mkdir dir="${files.dir}"/>
+		<echo file="${files.dir}/actors.txt"></echo>
+		<echo file="${files.dir}/usedActors.txt"></echo>
+		<mkdir dir="${bin.dir}"/>
+		<mkdir dir="${output.dir}"/>
+		<echo file="${output.dir}/actors.txt"></echo>
+		<echo file="${output.dir}/usedActors.txt"></echo>
+		<mkdir dir="${lib.dir}"/>
+		<mkdir dir="${tests.dir}"/>
+        </target>
+
+        <target name="compile" description="compile java" depends="make_dirs">
+                <javac destdir="${wikiProgC.dir}">
+                        <src path="${wikiProgJ.dir}"/>
+                </javac>
+		<javac destdir="${wikiTestsC.dir}">
+			<src path="${wikiTestsJ.dir}"/>
+		</javac>
+        </target>
+
+        <target name="make_jar" description="make jar file" depends="compile">
+                <jar destfile="${lib.dir}/Wiki.jar">
+                        <fileset dir="${wikiProgC.dir}">
+                                <include name="**/*.class"/>
+                        </fileset>
+                </jar>
+        </target>
+
+	<target name="make_prog_run_file" description="make file Wiki.sh" depends="make_jar">
+		<echo file="${bin.dir}/Wiki.sh">cd ..
+cd build/ru/gavr/wiki/prog
+java Search
+cd ../../../../..
+cp build/ru/gavr/wiki/prog/files/actors.txt bin/output
+cp build/ru/gavr/wiki/prog/files/usedActors.txt bin/output
+		</echo> 
+	</target>
+
+	<target name="make_test_run_file" description="make file Wiki.sh" depends="make_prog_run_file">
+		<echo file="${tests.dir}/Tests.sh">cd ..
+cd build/ru/gavr/wiki/tests
+java Unique
+java Existence
+		</echo> 
+	</target>
+
+        <target name="all" description="Do the build" depends="make_test_run_file"/>
+       
+</project>
