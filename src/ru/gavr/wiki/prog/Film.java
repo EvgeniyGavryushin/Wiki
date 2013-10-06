@@ -1,3 +1,9 @@
+/**
+*Helps to create the track of found films with their cast
+*@author Evgeniy Gavryushin	
+*@version 1.0 Oct 6, 2013
+*/
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -6,11 +12,17 @@ import java.util.regex.Pattern;
 
 public class Film {
 	
-	public static Stack<String> usedFilms = new Stack<String>(); // logged films
+	/** Logged films */
+	public static Stack<String> usedFilms = new Stack<String>();
 	
-	public Queue<String> listOfActors = new LinkedList<String>();// list of actors in the film
+	/** List of actors in the film */
+	public Queue<String> listOfActors = new LinkedList<String>();
 	
-	// create film and its cast
+	/** 
+	*Create film and its cast
+	*@param URL 		Current URL-adress of the film
+	*@param sourceCode 	Downloaded source code of the film
+	*/
 	Film(String URL, StringBuilder sourceCode) {
 		int tableStart = 0;
 		int tableEnd = sourceCode.indexOf("id=\"Cast\"");
@@ -46,6 +58,10 @@ public class Film {
 		usedFilms.push(URL);
 	}
 
+	/**
+	*Checks if the film can be created
+	*@return 	"true" - if yes, "false" - if no
+	*/
 	public static boolean canBeCreated(StringBuilder sourceCode) {
 		if (!(Film.wasLogged(Search.URL)) &&  Film.parseURL(sourceCode)) {
 			return true;
@@ -53,7 +69,14 @@ public class Film {
 		return false;
 	}
 	
-	// get the cast of the film
+	/** 
+	*Get the cast of the film
+	*@param start 		Index of the symbol in the source code from which the search of the cast will start
+	*@param end 		Index of the symbol in the source code to which the search of the cast will continue
+	*@param sourceCode 	Source code of the web-page
+	*@param pattern 	RegExp which help to find the film's cast in the source code
+	*@return flag		If cast was found return "false" else return "true"
+	*/
 	private boolean getActors(int start, int end, StringBuilder sourceCode, String pattern) {
 		boolean flag = true;
 		
@@ -78,7 +101,11 @@ public class Film {
 		return flag;
 	}
 	
-	// find the required information
+	/** 
+	*Check whether the web-page has article Cast else the downloaded web-page is not about the film
+	*@param sourceCode  Source code of the film's web-page
+	*@return 			"true" - if the web-page is about the film, "fasle" - if not
+	*/
 	private static boolean parseURL(StringBuilder sourceCode) {		
 		if (sourceCode.toString() == "-1") return false;
 		
@@ -89,7 +116,11 @@ public class Film {
 		else return false;
 	}
 	
-	// check on whether the film was met
+	/** 
+	*Check whether we have already met the film
+	*@param URL 	The URL-adress of film
+	*@return 		"true" - if we hav already met, "false" - if not 
+	*/
 	private static boolean wasLogged(String URL) {
 		if (usedFilms.contains(URL)) return true;
 		else return false;

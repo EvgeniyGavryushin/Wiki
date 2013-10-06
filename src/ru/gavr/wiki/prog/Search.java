@@ -1,3 +1,10 @@
+/**
+*Find 1000 actors(actresses) on web-site en.wikipedia.org
+*
+*@author Evgeniy Gavryushin
+*@version 1.0 Oct 6, 2013
+*/
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -5,29 +12,32 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Search {
+	/** Track of actors */
+	static Stack<Actor> actors = new Stack<Actor>(); 
+
+	/** Track of films */
+	static Stack<Film> films = new Stack<Film>();
 	
-	static Stack<Actor> actors = new Stack<Actor>(); // track of  actors
-	static Stack<Film> films = new Stack<Film>(); // track of films
+	/** Current URL */
+	static String URL;
 	
-	static String URL; // current URL
-	
-	// helping variables for URL
+	/** Helping variables for initializing URL */
 	static String _URL = "";
 	static String filmography = ""; 
 	
-	// read URL-address from console
+	/** Read URL-address from console */
 	public static void readUrl() {
 		Scanner in = new Scanner(System.in);
 		URL = in.nextLine();
 		in.close();
 	}
 	
-	// output
+	/** Output */
 	static public void writeln(String output) {
 		System.out.println(output);
 	}
 	
-	// clear all files before starting search
+	/** Clear all files before starting search */
 	static public void clearFiles() throws IOException {
 		FileWriter fstream = new FileWriter("files/actors.txt", false);
 	    BufferedWriter fbw = new BufferedWriter(fstream);
@@ -38,13 +48,16 @@ public class Search {
 	    fbw1.close(); 
 	}
 
-	// enter point
+	/**
+	*The user enters the URL-adress of actor(actoress) from Wikipedia
+	*In result, the user will recieve the name's and URL-adresses of 1000 actors(actresses)
+	*/
 	public static void main(String[] args) throws Exception {
 		writeln("Enter the URL-address:");
 		
 		readUrl(); 	// read URL-address from console
 		
-		clearFiles();
+		clearFiles(); // clearing all file that will contain the resuil in the end
 				
 		// search of actors in Wikipedia
 		while (Actor.getTheNumberOfActors() < 1000) {

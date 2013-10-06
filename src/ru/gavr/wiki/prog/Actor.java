@@ -1,3 +1,9 @@
+/**
+*Helps to create the track of found actors with their filmography
+*@author Evgeniy Gavryushin	
+*@version 1.0 Oct 6, 2013
+*/
+
 import java.util.Stack;
 import java.io.*;
 import java.util.regex.Matcher;
@@ -5,15 +11,23 @@ import java.util.regex.Pattern;
 
 public class Actor {
 	
-	public static Stack<String> usedActors = new Stack<String>(); // logged actors
+	/** Logged actors */
+	public static Stack<String> usedActors = new Stack<String>();
 	
+	/** The number of actors */
 	private static int theNumberOfActors = 0;
 	
 	private static int start;
 		
-	public Stack<String> filmography = new Stack<String>(); // actor's filmography
+	/** Actor's filmography */
+	public Stack<String> filmography = new Stack<String>();
 		
-	// create actor and its filmography
+	/** 
+	*Create actor and its filmography
+	*@param URL 		Current URL-adress of the actor(actress)
+	*@param sourceCode 	Downloaded source code of the actor(actress)
+	*@exception 	Thrown if one of the files can not be opened
+	*/
 	Actor(String URL, StringBuilder sourceCode) throws IOException {
 		int tableStart = 0;
 		int tableEnd = start;
@@ -54,16 +68,27 @@ public class Actor {
 		increaseTheNumberOfActors();
 	}
 
+	/**
+	*Checks if the actor(actress) can be created
+	*@return 	"true" - if yes, "false" - if no
+	*/
 	public static boolean canBeCreated() throws Exception {
 		StringBuilder sourceCode = WebPage.downloadSourceCode(Search.URL);
 		if (!(wasLogged(getName(sourceCode))) && parseURL(sourceCode) &&
-			!(WebPage.downloadSourceCode(Search._URL + Search.filmography).toString()).equals("-1")) {
+			    !(WebPage.downloadSourceCode(Search._URL + Search.filmography).toString()).equals("-1")) {
 			return true;
 		}
 		return false;
 	}
 	
-	// get the filmography of the actor
+	/** 
+	*Get the filmography of the actor(actress)
+	*@param start 		Index of the symbol in the source code from which the search of the filmography will start
+	*@param end 		Index of the symbol in the source code to which the search of filmography will continue
+	*@param sourceCode 	Source code of the web-page
+	*@param pattern 	RegExp which help to find the actor's(actress') filmography in the source code
+	*@return flag		If filmography was found return "false" else return "true"
+	*/
 	private boolean getFilmography(int start, int end, StringBuilder sourceCode, String pattern) {
 		boolean flag = true;
 		
@@ -91,7 +116,12 @@ public class Actor {
     	return flag;
 	}
 	
-	// write actor into the file 
+	/** 
+	*Write actor into the file
+	*@param URL 	Current URL-adress of the actor(actress)
+	*@param name 	The name of the actor(actress)
+	*@exception 	Thrown if one of the files can not be opened 
+	*/ 
 	private void writeToFile(String URL, String name) throws IOException {
 	    FileWriter fstream = new FileWriter("files/actors.txt", true);
 	    BufferedWriter fbw = new BufferedWriter(fstream);
@@ -104,7 +134,6 @@ public class Actor {
 	    fbw1.write(URL);
 	    fbw1.newLine();
 	    fbw1.close();
-	    
 	}
 	
 	public static int getTheNumberOfActors() {
@@ -116,6 +145,11 @@ public class Actor {
 		System.out.println(theNumberOfActors);
 	}
 	
+	/**
+	*Get the name of the actor(actress)
+	*@param sourceCode 	Source code of the actor's(actress') web-page
+	*@return name 		The name of the actor(actress) 
+	*/
 	public static String getName(StringBuilder sourceCode) {
 		String name = "";
 		int index = sourceCode.indexOf("<title>");
@@ -130,7 +164,11 @@ public class Actor {
 		return name;
 	}
 		
-	// check whether the required information exists
+	/** 
+	*Check whether the web-page has article Filmography else the downloaded web-page is not about the actor(actress)
+	*@param sourceCode  Source code of the actor's(actress') web-page
+	*@return 			"true" - if the web-page is about the actor(actress), "fasle" - if not
+	*/
 	private static boolean parseURL(StringBuilder sourceCode) {		
 		if (sourceCode.toString() == "-1") return false;
 		
@@ -160,7 +198,11 @@ public class Actor {
 		else return false;
 	}
 	
-	// check on whether actor was met
+	/** 
+	*Check whether we have already met the actor(actress)
+	*@param name 	The name of the actor(actress)
+	*@return 		"true" - if we met, "false" - if not 
+	*/
 	private static boolean wasLogged(String name) {
 		if (usedActors.contains(name)) return true;
 		else return false;

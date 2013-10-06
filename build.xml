@@ -13,6 +13,7 @@
 	<property name="output.dir" value="bin/output"/>
 	<property name="lib.dir" value="lib"/>
 	<property name="tests.dir" value="tests"/>
+	<property name="docs.dir" value="docs"/>
        
         <target name="make_dirs" description="Make some dirs">
                 <mkdir dir="${build.dir}"/>
@@ -30,6 +31,7 @@
 		<echo file="${output.dir}/usedActors.txt"></echo>
 		<mkdir dir="${lib.dir}"/>
 		<mkdir dir="${tests.dir}"/>
+		<mkdir dir="${docs.dir}"/>
         </target>
 
         <target name="compile" description="compile java" depends="make_dirs">
@@ -41,7 +43,15 @@
 		</javac>
         </target>
 
-        <target name="make_jar" description="make jar file" depends="compile">
+	<target name="docs" depends="compile">
+    		<javadoc packagenames="src" sourcepath="${wikiProgJ.dir}" destdir="${docs.dir}">
+       			<fileset dir="${wikiProgJ.dir}">
+                		<include name="**" />
+           		</fileset>
+    		</javadoc>
+  	</target>
+
+        <target name="make_jar" description="make jar file" depends="docs">
                 <jar destfile="${lib.dir}/Wiki.jar">
                         <fileset dir="${wikiProgC.dir}">
                                 <include name="**/*.class"/>
